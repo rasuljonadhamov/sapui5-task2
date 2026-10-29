@@ -1,7 +1,8 @@
 sap.ui.define([
     "./BaseController",
-    "sap/ui/model/json/JSONModel"
-], (BaseController, JSONModel) => {
+    "sap/ui/model/json/JSONModel",
+    "sap/m/MessageToast"
+], (BaseController, JSONModel, MessageToast) => {
     "use strict";
 
     return BaseController.extend("sapui5task2.controller.Main", {
@@ -60,6 +61,41 @@ sap.ui.define([
             });
 
             this.setModel(oBooksModel, "books");
+        },
+
+        /**
+         * Appends a new empty record at the end of the table.
+         */
+        onAddRecord() {
+            const oModel = this.getModel("books");
+
+            oModel.setProperty("/books", oModel.getProperty("/books").concat({
+                ID: "",
+                Name: "",
+                Author: "",
+                Genre: "",
+                ReleaseDate: "",
+                AvailableQuantity: 0
+            }));
+        },
+
+        /**
+         * Removes the records that are selected in the table.
+         */
+        onDeleteRecord() {
+            const oTable = this.byId("booksTable");
+            const aSelectedBooks = oTable.getSelectedContexts().map((oContext) => oContext.getObject());
+
+            if (!aSelectedBooks.length) {
+                MessageToast.show(this.getResourceBundle().getText("noSelectionMessage"));
+
+                return;
+            }
+
+            const oModel = this.getModel("books");
+
+            oModel.setProperty("/books", oModel.getProperty("/books").filter((oBook) => !aSelectedBooks.includes(oBook)));
+            oTable.removeSelections(true);
         }
     });
 });
