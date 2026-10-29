@@ -2,5 +2,49 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
+        <Table id="booksTable" items="{books>/books}" class="sapUiResponsiveMargin" width="auto">
+            <headerToolbar>
+                <Toolbar>
+                    <Title id="booksTableTitle" text="{i18n>booksTableTitle} ({= ${books>/books}.length })" level="H2"/>
+                </Toolbar>
+            </headerToolbar>
+            <columns>
+                <Column width="6rem">
+                    <Text text="{i18n>columnId}"/>
+                </Column>
+                <Column>
+                    <Text text="{i18n>columnName}"/>
+                </Column>
+                <Column minScreenWidth="Tablet" demandPopin="true">
+                    <Text text="{i18n>columnAuthor}"/>
+                </Column>
+                <Column minScreenWidth="Tablet" demandPopin="true">
+                    <Text text="{i18n>columnGenre}"/>
+                </Column>
+                <Column minScreenWidth="Desktop" demandPopin="true">
+                    <Text text="{i18n>columnReleaseDate}"/>
+                </Column>
+                <Column hAlign="End">
+                    <Text text="{i18n>columnAvailableQuantity}"/>
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem vAlign="Middle">
+                    <cells>
+                        <Text text="{books>ID}"/>
+                        <ObjectIdentifier title="{books>Name}"/>
+                        <Text text="{books>Author}"/>
+                        <Text text="{books>Genre}"/>
+                        <Text text="{
+                            path: 'books>ReleaseDate',
+                            type: 'sap.ui.model.type.Date',
+                            formatOptions: { style: 'medium', source: { pattern: 'yyyy-MM-dd' } }
+                        }"/>
+                        <ObjectNumber number="{books>AvailableQuantity}"
+                            state="{= ${books>AvailableQuantity} > 0 ? 'Success' : 'Error' }"/>
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
     </Page>
 </mvc:View>
