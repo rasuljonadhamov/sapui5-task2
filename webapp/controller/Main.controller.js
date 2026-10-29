@@ -1,10 +1,10 @@
 sap.ui.define([
-    "sap/ui/core/mvc/Controller",
+    "./BaseController",
     "sap/ui/model/json/JSONModel"
-], (Controller, JSONModel) => {
+], (BaseController, JSONModel) => {
     "use strict";
 
-    return Controller.extend("sapui5task2.controller.Main", {
+    return BaseController.extend("sapui5task2.controller.Main", {
         onInit() {
             const oBooksModel = new JSONModel({
                 books: [
@@ -59,7 +59,7 @@ sap.ui.define([
                 ]
             });
 
-            this.getView().setModel(oBooksModel, "books");
+            this.setModel(oBooksModel, "books");
         }
     });
 });
