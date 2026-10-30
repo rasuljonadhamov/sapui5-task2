@@ -16,7 +16,8 @@ sap.ui.define([
                     Author: "Harper Lee",
                     Genre: "Fiction",
                     ReleaseDate: "1960-07-11",
-                    AvailableQuantity: 12
+                    AvailableQuantity: 12,
+                    editMode: false
                 },
                 {
                     ID: "B002",
@@ -24,7 +25,8 @@ sap.ui.define([
                     Author: "Frank Herbert",
                     Genre: "Science Fiction",
                     ReleaseDate: "1965-08-01",
-                    AvailableQuantity: 7
+                    AvailableQuantity: 7,
+                    editMode: false
                 },
                 {
                     ID: "B003",
@@ -32,7 +34,8 @@ sap.ui.define([
                     Author: "J. R. R. Tolkien",
                     Genre: "Fantasy",
                     ReleaseDate: "1937-09-21",
-                    AvailableQuantity: 0
+                    AvailableQuantity: 0,
+                    editMode: false
                 },
                 {
                     ID: "B004",
@@ -40,7 +43,8 @@ sap.ui.define([
                     Author: "Yuval Noah Harari",
                     Genre: "History",
                     ReleaseDate: "2011-01-01",
-                    AvailableQuantity: 23
+                    AvailableQuantity: 23,
+                    editMode: false
                 },
                 {
                     ID: "B005",
@@ -48,7 +52,8 @@ sap.ui.define([
                     Author: "Robert C. Martin",
                     Genre: "Programming",
                     ReleaseDate: "2008-08-01",
-                    AvailableQuantity: 5
+                    AvailableQuantity: 5,
+                    editMode: false
                 },
                 {
                     ID: "B006",
@@ -56,7 +61,8 @@ sap.ui.define([
                     Author: "Agatha Christie",
                     Genre: "Mystery",
                     ReleaseDate: "1934-01-06",
-                    AvailableQuantity: 3
+                    AvailableQuantity: 3,
+                    editMode: false
                 }
             ];
 
@@ -78,7 +84,8 @@ sap.ui.define([
                 Author: "",
                 Genre: "",
                 ReleaseDate: "",
-                AvailableQuantity: 0
+                AvailableQuantity: 0,
+                editMode: false
             }));
         },
 
@@ -99,6 +106,36 @@ sap.ui.define([
 
             oModel.setProperty("/books", oModel.getProperty("/books").filter((oBook) => !aSelectedBooks.includes(oBook)));
             oTable.removeSelections(true);
+        },
+
+        /**
+         * Switches the row of the pressed button into edit mode. The name is copied into
+         * a draft property first, so the model keeps the saved name until the user
+         * presses 'Save'.
+         *
+         * @param {sap.ui.base.Event} oEvent The press event of the 'Edit Title' button
+         */
+        onEditTitle(oEvent) {
+            const oContext = oEvent.getSource().getBindingContext("books");
+            const oModel = this.getModel("books");
+
+            oModel.setProperty("NameDraft", oContext.getProperty("Name"), oContext);
+            oModel.setProperty("editMode", true, oContext);
+        },
+
+        /**
+         * Writes the edited name back into the record and switches the row into
+         * display mode again.
+         *
+         * @param {sap.ui.base.Event} oEvent The press event of the 'Save' button, or the
+         *   submit event of the name input
+         */
+        onSaveTitle(oEvent) {
+            const oContext = oEvent.getSource().getBindingContext("books");
+            const oModel = this.getModel("books");
+
+            oModel.setProperty("Name", oContext.getProperty("NameDraft"), oContext);
+            oModel.setProperty("editMode", false, oContext);
         },
 
         /**
