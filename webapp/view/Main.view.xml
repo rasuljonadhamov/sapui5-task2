@@ -37,12 +37,18 @@
                 <Column hAlign="End">
                     <Text text="{i18n>columnAvailableQuantity}"/>
                 </Column>
+                <Column width="9rem" hAlign="Center">
+                    <Text text="{i18n>columnActions}"/>
+                </Column>
             </columns>
             <items>
                 <ColumnListItem vAlign="Middle">
                     <cells>
                         <Text text="{books>ID}"/>
-                        <ObjectIdentifier title="{books>Name}"/>
+                        <HBox width="100%" alignItems="Center">
+                            <ObjectIdentifier title="{books>Name}" visible="{= !${books>editMode} }"/>
+                            <Input width="100%" value="{books>NameDraft}" visible="{= ${books>editMode} }" submit=".onSaveTitle"/>
+                        </HBox>
                         <Text text="{books>Author}"/>
                         <Text text="{books>Genre}"/>
                         <Text text="{
@@ -52,6 +58,12 @@
                         }"/>
                         <ObjectNumber number="{books>AvailableQuantity}"
                             state="{= ${books>AvailableQuantity} > 0 ? 'Success' : 'Error' }"/>
+                        <HBox justifyContent="Center">
+                            <Button text="{i18n>editTitleButton}" icon="sap-icon://edit"
+                                visible="{= !${books>editMode} }" press=".onEditTitle"/>
+                            <Button text="{i18n>saveTitleButton}" icon="sap-icon://save" type="Emphasized"
+                                visible="{= ${books>editMode} }" press=".onSaveTitle"/>
+                        </HBox>
                     </cells>
                 </ColumnListItem>
             </items>
