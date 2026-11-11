@@ -4,9 +4,17 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
+    "sap/m/MessageBox",
     "sap/m/MessageToast",
   ],
-  (BaseController, JSONModel, Filter, FilterOperator, MessageToast) => {
+  (
+    BaseController,
+    JSONModel,
+    Filter,
+    FilterOperator,
+    MessageBox,
+    MessageToast,
+  ) => {
     "use strict";
 
     return BaseController.extend("sapui5task2.controller.Main", {
@@ -77,9 +85,6 @@ sap.ui.define(
         );
       },
 
-      /**
-       * Appends a new empty record at the end of the table.
-       */
       onAddRecord() {
         const oModel = this.getModel("books");
 
@@ -97,41 +102,37 @@ sap.ui.define(
         );
       },
 
-      async onDeleteRecord() {
-        if (!this.byId("booksTable").getSelectedContexts().length) {
-          MessageToast.show(
-            this.getResourceBundle().getText("noSelectionMessage"),
-          );
-
-          return;
-        }
-
-        this._oConfirmDialog ??= await this.loadFragment({
-          name: "sapui5task2.view.ConfirmDeleteDialog",
-        });
-
-        this._oConfirmDialog.open();
-      },
-
-      onConfirmDelete() {
+      onDeleteRecord() {
         const oTable = this.byId("booksTable");
         const aSelectedBooks = oTable
           .getSelectedContexts()
           .map((oContext) => oContext.getObject());
-        const oModel = this.getModel("books");
+        const oResurceBundle = this.getResourceBundle();
 
-        oModel.setProperty(
-          "/books",
-          oModel
-            .getProperty("/books")
-            .filter((oBook) => !aSelectedBooks.includes(oBook)),
-        );
-        oTable.removeSelections(true);
-        this._oConfirmDialog.close();
-      },
+        if (!aSelectedBooks.length) {
+          MessageToast.show(oResurceBundle.getText("noSelectionMessage"));
 
-      onCancelDelete() {
-        this._oConfirmDialog.close();
+          return;
+        }
+
+        MessageBox.confirm(oResurceBundle.getText("deleteConfirmationText"), {
+          title: oResurceBundle.getText("deleteConfirmationTitle"),
+          onClose: (sAction) => {
+            if (sAction !== MessageBox.Action.OK) {
+              return;
+            }
+
+            const oModel = this.getModel("books");
+
+            oModel.setProperty(
+              "/books",
+              oModel
+                .getProperty("/books")
+                .filter((oBook) => !aSelectedBooks.includes(oBook)),
+            );
+            oTable.removeSelections(true);
+          },
+        });
       },
 
       /**
@@ -164,10 +165,6 @@ sap.ui.define(
         oModel.setProperty("editMode", false, oContext);
       },
 
-      /**
-       * Filters the table by the book name and the genre that are currently entered
-       * in the toolbar. An empty name or genre is ignored.
-       */
       onFilter() {
         const sName = this.byId("nameFilter").getValue().trim();
         const sGenre = this.byId("genreFilter").getSelectedKey();
