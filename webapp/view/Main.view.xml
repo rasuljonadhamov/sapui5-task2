@@ -3,13 +3,13 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
-        <Table id="booksTable" items="{books>/books}" mode="MultiSelect" class="sapUiResponsiveMargin" width="auto">
+        <Table id="booksTable" items="{books>/books}" mode="MultiSelect" selectionChange=".onSelectionChange" class="sapUiResponsiveMargin" width="auto">
             <headerToolbar>
                 <Toolbar>
                     <Title id="booksTableTitle" text="{i18n>booksTableTitle} ({= ${books>/books}.length })" level="H2"/>
                     <ToolbarSpacer/>
                     <Button id="addRecordButton" text="{i18n>addRecordButton}" icon="sap-icon://add" press=".onAddRecord"/>
-                    <Button id="deleteRecordButton" text="{i18n>deleteRecordButton}" icon="sap-icon://delete" press=".onDeleteRecord"/>
+                    <Button id="deleteRecordButton" text="{i18n>deleteRecordButton}" icon="sap-icon://delete" enabled="{books>/hasSelection}" press=".onDeleteRecord"/>
                     <ToolbarSeparator/>
                     <Input id="nameFilter" width="12rem" placeholder="{i18n>nameFilterPlaceholder}" submit=".onFilter"/>
                     <Select id="genreFilter" items="{books>/genres}" autoAdjustWidth="true" tooltip="{i18n>genreFilterTooltip}">
