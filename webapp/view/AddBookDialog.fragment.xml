@@ -1,0 +1,33 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Dialog id="addBookDialog" title="New Book" contentWidth="24rem">
+        <content>
+            <VBox id="addBookForm" class="sapUiSmallMargin">
+                <Label id="newBookIdLabel" text="ID" labelFor="newBookId" required="true"/>
+                <Input id="newBookId"/>
+
+                <Label id="newBookNameLabel" text="Name" labelFor="newBookName" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newBookName"/>
+
+                <Label id="newBookAuthorLabel" text="Author" labelFor="newBookAuthor" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newBookAuthor"/>
+
+                <Label id="newBookGenreLabel" text="Genre" labelFor="newBookGenre" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newBookGenre"/>
+
+                <Label id="newBookReleaseDateLabel" text="Release Date" labelFor="newBookReleaseDate" required="true" class="sapUiSmallMarginTop"/>
+                <DatePicker id="newBookReleaseDate" valueFormat="yyyy-MM-dd" displayFormat="medium"/>
+
+                <Label id="newBookQuantityLabel" text="Available" labelFor="newBookQuantity" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newBookQuantity" type="Number"/>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button id="addBookButton" text="Add" type="Emphasized" press=".onAddBook"/>
+        </beginButton>
+        <endButton>
+            <Button id="cancelAddBookButton" text="Cancel" press=".onCancelAddBook"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

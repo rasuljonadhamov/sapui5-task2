@@ -9,6 +9,15 @@ sap.ui.define(
   (BaseController, JSONModel, Filter, FilterOperator, MessageBox) => {
     "use strict";
 
+    const aNewBookFieldIds = [
+      "newBookId",
+      "newBookName",
+      "newBookAuthor",
+      "newBookGenre",
+      "newBookReleaseDate",
+      "newBookQuantity",
+    ];
+
     return BaseController.extend("sapui5task2.controller.Main", {
       onInit() {
         const aBooks = [
@@ -78,21 +87,53 @@ sap.ui.define(
         );
       },
 
-      onAddRecord() {
-        const oModel = this.getModel("books");
+      async onAddRecord() {
+        if (!this._oAddBookDialog) {
+          this._oAddBookDialog = await this.loadFragment({
+            name: "sapui5task2.view.AddBookDialog",
+          });
+        }
 
-        oModel.setProperty(
-          "/books",
-          oModel.getProperty("/books").concat({
-            ID: "",
-            Name: "",
-            Author: "",
-            Genre: "",
-            ReleaseDate: "",
-            AvailableQuantity: 0,
-            editMode: false,
-          }),
-        );
+        this._oAddBookDialog.open();
+      },
+
+      onAddBook() {
+        const bIdValid = this._checkRequired("newBookId");
+        const bNameValid = this._checkRequired("newBookName");
+        const bAuthorValid = this._checkRequired("newBookAuthor");
+        const bGenreValid = this._checkRequired("newBookGenre");
+        const bReleaseDateValid = this._checkReleaseDate();
+        const bQuantityValid = this._checkQuantity();
+
+        if (
+          !bIdValid ||
+          !bNameValid ||
+          !bAuthorValid ||
+          !bGenreValid ||
+          !bReleaseDateValid ||
+          !bQuantityValid
+        ) {
+          return;
+        }
+
+        const oModel = this.getModel("books");
+        const aBooks = oModel.getProperty("/books").concat({
+          ID: this.byId("newBookId").getValue().trim(),
+          Name: this.byId("newBookName").getValue().trim(),
+          Author: this.byId("newBookAuthor").getValue().trim(),
+          Genre: this.byId("newBookGenre").getValue().trim(),
+          ReleaseDate: this.byId("newBookReleaseDate").getValue(),
+          AvailableQuantity: this.byId("newBookQuantity").getValue(),
+          editMode: false,
+        });
+
+        oModel.setProperty("/books", aBooks);
+        oModel.setProperty("/genres", this._getGenreItems(aBooks));
+        this._closeAddBookDialog();
+      },
+
+      onCancelAddBook() {
+        this._closeAddBookDialog();
       },
 
       onSelectionChange(oEvent) {
@@ -174,6 +215,70 @@ sap.ui.define(
         }
 
         this.byId("booksTable").getBinding("items").filter(aFilters);
+      },
+
+      _checkRequired(sFieldId) {
+        const oField = this.byId(sFieldId);
+
+        if (!oField.getValue().trim()) {
+          oField.setValueState("Error");
+          oField.setValueStateText(
+            this.getResourceBundle().getText("requiredFieldMessage"),
+          );
+
+          return false;
+        }
+
+        oField.setValueState("None");
+
+        return true;
+      },
+
+      _checkReleaseDate() {
+        const oDatePicker = this.byId("newBookReleaseDate");
+
+        if (!oDatePicker.getDateValue()) {
+          oDatePicker.setValueState("Error");
+          oDatePicker.setValueStateText(
+            this.getResourceBundle().getText("releaseDateMessage"),
+          );
+
+          return false;
+        }
+
+        oDatePicker.setValueState("None");
+
+        return true;
+      },
+
+      _checkQuantity() {
+        const oInput = this.byId("newBookQuantity");
+        const sQuantity = oInput.getValue().trim();
+        const fQuantity = Number(sQuantity);
+
+        if (!sQuantity || Number.isNaN(fQuantity) || fQuantity < 0) {
+          oInput.setValueState("Error");
+          oInput.setValueStateText(
+            this.getResourceBundle().getText("quantityMessage"),
+          );
+
+          return false;
+        }
+
+        oInput.setValueState("None");
+
+        return true;
+      },
+
+      _closeAddBookDialog() {
+        aNewBookFieldIds.forEach((sFieldId) => {
+          const oField = this.byId(sFieldId);
+
+          oField.setValue("");
+          oField.setValueState("None");
+        });
+
+        this._oAddBookDialog.close();
       },
 
       /**
