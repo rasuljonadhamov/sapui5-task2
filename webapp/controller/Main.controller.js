@@ -5,16 +5,8 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
-    "sap/m/MessageToast",
   ],
-  (
-    BaseController,
-    JSONModel,
-    Filter,
-    FilterOperator,
-    MessageBox,
-    MessageToast,
-  ) => {
+  (BaseController, JSONModel, Filter, FilterOperator, MessageBox) => {
     "use strict";
 
     return BaseController.extend("sapui5task2.controller.Main", {
@@ -80,6 +72,7 @@ sap.ui.define(
           new JSONModel({
             books: aBooks,
             genres: this._getGenreItems(aBooks),
+            hasSelection: false,
           }),
           "books",
         );
@@ -102,18 +95,19 @@ sap.ui.define(
         );
       },
 
+      onSelectionChange(oEvent) {
+        this.getModel("books").setProperty(
+          "/hasSelection",
+          oEvent.getSource().getSelectedContexts().length > 0,
+        );
+      },
+
       onDeleteRecord() {
         const oTable = this.byId("booksTable");
         const aSelectedBooks = oTable
           .getSelectedContexts()
           .map((oContext) => oContext.getObject());
         const oResurceBundle = this.getResourceBundle();
-
-        if (!aSelectedBooks.length) {
-          MessageToast.show(oResurceBundle.getText("noSelectionMessage"));
-
-          return;
-        }
 
         MessageBox.confirm(oResurceBundle.getText("deleteConfirmationText"), {
           title: oResurceBundle.getText("deleteConfirmationTitle"),
@@ -131,6 +125,7 @@ sap.ui.define(
                 .filter((oBook) => !aSelectedBooks.includes(oBook)),
             );
             oTable.removeSelections(true);
+            oModel.setProperty("/hasSelection", false);
           },
         });
       },
