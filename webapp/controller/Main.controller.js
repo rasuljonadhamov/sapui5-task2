@@ -9,6 +9,15 @@ sap.ui.define(
   (BaseController, JSONModel, Filter, FilterOperator, MessageBox) => {
     "use strict";
 
+    const aNewBookFieldIds = [
+      "newBookId",
+      "newBookName",
+      "newBookAuthor",
+      "newBookGenre",
+      "newBookReleaseDate",
+      "newBookQuantity",
+    ];
+
     return BaseController.extend("sapui5task2.controller.Main", {
       onInit() {
         const aBooks = [
@@ -78,21 +87,43 @@ sap.ui.define(
         );
       },
 
-      onAddRecord() {
-        const oModel = this.getModel("books");
+      async onAddRecord() {
+        if (!this._oAddBookDialog) {
+          this._oAddBookDialog = await this.loadFragment({
+            name: "sapui5task2.view.AddBookDialog",
+          });
+        }
 
-        oModel.setProperty(
-          "/books",
-          oModel.getProperty("/books").concat({
-            ID: "",
-            Name: "",
-            Author: "",
-            Genre: "",
-            ReleaseDate: "",
-            AvailableQuantity: 0,
-            editMode: false,
-          }),
+        this._oAddBookDialog.open();
+      },
+
+      onAddBook() {
+        const oResults = aNewBookFieldIds.map((sId) =>
+          this._validateControl(this.byId(sId)),
         );
+
+        if (oResults.includes(false)) {
+          return;
+        }
+
+        const oModel = this.getModel("books");
+        const aBooks = oModel.getProperty("/books").concat({
+          ID: this.byId("newBookId").getValue().trim(),
+          Name: this.byId("newBookName").getValue().trim(),
+          Author: this.byId("newBookAuthor").getValue().trim(),
+          Genre: this.byId("newBookGenre").getValue().trim(),
+          ReleaseDate: this.byId("newBookReleaseDate").getValue(),
+          AvailableQuantity: Number(this.byId("newBookQuantity").getValue()),
+          editMode: false,
+        });
+
+        oModel.setProperty("/books", aBooks);
+        oModel.setProperty("/genres", this._getGenreItems(aBooks));
+        this._closeAddBookDialog();
+      },
+
+      onCancelAddBook() {
+        this._closeAddBookDialog();
       },
 
       onSelectionChange(oEvent) {
@@ -174,6 +205,34 @@ sap.ui.define(
         }
 
         this.byId("booksTable").getBinding("items").filter(aFilters);
+      },
+
+      _validateControl(oControl) {
+        const sValue = oControl.getValue().trim();
+        let bIsValid = false;
+
+        if (oControl.isA("sap.m.DatePicker")) {
+          bIsValid = !!sValue && oControl.isValidValue();
+        } else if (oControl.getType() === "Number") {
+          bIsValid = !!sValue && Number(sValue) >= 0;
+        } else {
+          bIsValid = !!sValue;
+        }
+
+        oControl.setValueState(bIsValid ? "None" : "Error");
+
+        return bIsValid;
+      },
+
+      _closeAddBookDialog() {
+        aNewBookFieldIds.forEach((sFieldId) => {
+          const oField = this.byId(sFieldId);
+
+          oField.setValue("");
+          oField.setValueState("None");
+        });
+
+        this._oAddBookDialog.close();
       },
 
       /**
