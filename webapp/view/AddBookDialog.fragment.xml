@@ -1,33 +1,33 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:core="sap.ui.core">
-    <Dialog id="addBookDialog" title="New Book" contentWidth="24rem">
+    <Dialog id="addBookDialog" title="{i18n>addBookDialogTitle}" contentWidth="24rem">
         <content>
             <VBox id="addBookForm" class="sapUiSmallMargin">
-                <Label id="newBookIdLabel" text="ID" labelFor="newBookId" required="true"/>
+                <Label id="newBookIdLabel" text="{i18n>newBookIdLabel}" labelFor="newBookId" required="true"/>
                 <Input id="newBookId"/>
 
-                <Label id="newBookNameLabel" text="Name" labelFor="newBookName" required="true" class="sapUiSmallMarginTop"/>
+                <Label id="newBookNameLabel" text="{i18n>newBookNameLabel}" labelFor="newBookName" required="true" class="sapUiSmallMarginTop"/>
                 <Input id="newBookName"/>
 
-                <Label id="newBookAuthorLabel" text="Author" labelFor="newBookAuthor" required="true" class="sapUiSmallMarginTop"/>
+                <Label id="newBookAuthorLabel" text="{i18n>newBookAuthorLabel}" labelFor="newBookAuthor" required="true" class="sapUiSmallMarginTop"/>
                 <Input id="newBookAuthor"/>
 
-                <Label id="newBookGenreLabel" text="Genre" labelFor="newBookGenre" required="true" class="sapUiSmallMarginTop"/>
+                <Label id="newBookGenreLabel" text="{i18n>newBookGenreLabel}" labelFor="newBookGenre" required="true" class="sapUiSmallMarginTop"/>
                 <Input id="newBookGenre"/>
 
-                <Label id="newBookReleaseDateLabel" text="Release Date" labelFor="newBookReleaseDate" required="true" class="sapUiSmallMarginTop"/>
+                <Label id="newBookReleaseDateLabel" text="{i18n>newBookReleaseDateLabel}" labelFor="newBookReleaseDate" required="true" class="sapUiSmallMarginTop"/>
                 <DatePicker id="newBookReleaseDate" valueFormat="yyyy-MM-dd" displayFormat="medium"/>
 
-                <Label id="newBookQuantityLabel" text="Available" labelFor="newBookQuantity" required="true" class="sapUiSmallMarginTop"/>
+                <Label id="newBookQuantityLabel" text="{i18n>newBookQuantityLabel}" labelFor="newBookQuantity" required="true" class="sapUiSmallMarginTop"/>
                 <Input id="newBookQuantity" type="Number"/>
             </VBox>
         </content>
         <beginButton>
-            <Button id="addBookButton" text="Add" type="Emphasized" press=".onAddBook"/>
+            <Button id="addBookButton" text="{i18n>addButton}" type="Emphasized" press=".onAddBook"/>
         </beginButton>
         <endButton>
-            <Button id="cancelAddBookButton" text="Cancel" press=".onCancelAddBook"/>
+            <Button id="cancelAddBookButton" text="{i18n>cancelButton}" press=".onCancelAddBook"/>
         </endButton>
     </Dialog>
 </core:FragmentDefinition>
