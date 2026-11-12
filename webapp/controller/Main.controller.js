@@ -5,8 +5,16 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
+    "../model/formatter",
   ],
-  (BaseController, JSONModel, Filter, FilterOperator, MessageBox) => {
+  (
+    BaseController,
+    JSONModel,
+    Filter,
+    FilterOperator,
+    MessageBox,
+    formatter,
+  ) => {
     "use strict";
 
     const aNewBookFieldIds = [
@@ -19,6 +27,8 @@ sap.ui.define(
     ];
 
     return BaseController.extend("sapui5task2.controller.Main", {
+      formatter,
+
       onInit() {
         const aBooks = [
           {
