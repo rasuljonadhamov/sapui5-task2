@@ -98,21 +98,11 @@ sap.ui.define(
       },
 
       onAddBook() {
-        const bIdValid = this._checkRequired("newBookId");
-        const bNameValid = this._checkRequired("newBookName");
-        const bAuthorValid = this._checkRequired("newBookAuthor");
-        const bGenreValid = this._checkRequired("newBookGenre");
-        const bReleaseDateValid = this._checkReleaseDate();
-        const bQuantityValid = this._checkQuantity();
+        const oResults = aNewBookFieldIds.map((sId) =>
+          this._validateControl(this.byId(sId)),
+        );
 
-        if (
-          !bIdValid ||
-          !bNameValid ||
-          !bAuthorValid ||
-          !bGenreValid ||
-          !bReleaseDateValid ||
-          !bQuantityValid
-        ) {
+        if (oResults.includes(false)) {
           return;
         }
 
@@ -123,7 +113,7 @@ sap.ui.define(
           Author: this.byId("newBookAuthor").getValue().trim(),
           Genre: this.byId("newBookGenre").getValue().trim(),
           ReleaseDate: this.byId("newBookReleaseDate").getValue(),
-          AvailableQuantity: this.byId("newBookQuantity").getValue(),
+          AvailableQuantity: Number(this.byId("newBookQuantity").getValue()),
           editMode: false,
         });
 
@@ -217,57 +207,21 @@ sap.ui.define(
         this.byId("booksTable").getBinding("items").filter(aFilters);
       },
 
-      _checkRequired(sFieldId) {
-        const oField = this.byId(sFieldId);
+      _validateControl(oControl) {
+        const sValue = oControl.getValue().trim();
+        let bIsValid = false;
 
-        if (!oField.getValue().trim()) {
-          oField.setValueState("Error");
-          oField.setValueStateText(
-            this.getResourceBundle().getText("requiredFieldMessage"),
-          );
-
-          return false;
+        if (oControl.isA("sap.m.DatePicker")) {
+          bIsValid = !!sValue && oControl.isValidValue();
+        } else if (oControl.getType() === "Number") {
+          bIsValid = !!sValue && Number(sValue) >= 0;
+        } else {
+          bIsValid = !!sValue;
         }
 
-        oField.setValueState("None");
+        oControl.setValueState(bIsValid ? "None" : "Error");
 
-        return true;
-      },
-
-      _checkReleaseDate() {
-        const oDatePicker = this.byId("newBookReleaseDate");
-
-        if (!oDatePicker.getDateValue()) {
-          oDatePicker.setValueState("Error");
-          oDatePicker.setValueStateText(
-            this.getResourceBundle().getText("releaseDateMessage"),
-          );
-
-          return false;
-        }
-
-        oDatePicker.setValueState("None");
-
-        return true;
-      },
-
-      _checkQuantity() {
-        const oInput = this.byId("newBookQuantity");
-        const sQuantity = oInput.getValue().trim();
-        const fQuantity = Number(sQuantity);
-
-        if (!sQuantity || Number.isNaN(fQuantity) || fQuantity < 0) {
-          oInput.setValueState("Error");
-          oInput.setValueStateText(
-            this.getResourceBundle().getText("quantityMessage"),
-          );
-
-          return false;
-        }
-
-        oInput.setValueState("None");
-
-        return true;
+        return bIsValid;
       },
 
       _closeAddBookDialog() {
