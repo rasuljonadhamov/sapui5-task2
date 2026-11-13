@@ -3,69 +3,163 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
-        <Table id="booksTable" items="{books>/books}" mode="MultiSelect" selectionChange=".onSelectionChange" class="sapUiResponsiveMargin" width="auto">
-            <headerToolbar>
-                <Toolbar>
-                    <Title id="booksTableTitle" text="{i18n>booksTableTitle} ({= ${books>/books}.length })" level="H2"/>
-                    <ToolbarSpacer/>
-                    <Button id="addRecordButton" text="{i18n>addRecordButton}" icon="sap-icon://add" press=".onAddRecord"/>
-                    <Button id="deleteRecordButton" text="{i18n>deleteRecordButton}" icon="sap-icon://delete" enabled="{books>/hasSelection}" press=".onDeleteRecord"/>
-                    <ToolbarSeparator/>
-                    <Input id="nameFilter" width="12rem" placeholder="{i18n>nameFilterPlaceholder}" submit=".onFilter"/>
-                    <Select id="genreFilter" items="{books>/genres}" autoAdjustWidth="true" tooltip="{i18n>genreFilterTooltip}">
-                        <core:Item key="{books>key}" text="{books>text}"/>
-                    </Select>
-                    <Button id="filterButton" text="{i18n>filterButton}" icon="sap-icon://filter" type="Emphasized" press=".onFilter"/>
-                </Toolbar>
-            </headerToolbar>
-            <columns>
-                <Column width="6rem">
-                    <Text text="{i18n>columnId}"/>
-                </Column>
-                <Column>
-                    <Text text="{i18n>columnName}"/>
-                </Column>
-                <Column minScreenWidth="Tablet" demandPopin="true">
-                    <Text text="{i18n>columnAuthor}"/>
-                </Column>
-                <Column minScreenWidth="Tablet" demandPopin="true">
-                    <Text text="{i18n>columnGenre}"/>
-                </Column>
-                <Column minScreenWidth="Desktop" demandPopin="true">
-                    <Text text="{i18n>columnReleaseDate}"/>
-                </Column>
-                <Column hAlign="End">
-                    <Text text="{i18n>columnAvailableQuantity}"/>
-                </Column>
-                <Column width="9rem" hAlign="Center">
-                    <Text text="{i18n>columnActions}"/>
-                </Column>
-            </columns>
+        <IconTabBar id="modelTabBar">
             <items>
-                <ColumnListItem vAlign="Middle">
-                    <cells>
-                        <Text text="{books>ID}"/>
-                        <HBox width="100%" alignItems="Center">
-                            <ObjectIdentifier title="{books>Name}" visible="{= !${books>editMode} }"/>
-                            <Input width="100%" value="{books>NameDraft}" visible="{= ${books>editMode} }" submit=".onSaveTitle"/>
-                        </HBox>
-                        <Text text="{books>Author}"/>
-                        <Text text="{books>Genre}"/>
-                        <Text text="{
-                            path: 'books>ReleaseDate',
-                            formatter: '.formatter.formatReleaseYear'
-                        }"/>
-                        <ObjectNumber number="{books>AvailableQuantity}"
-                            state="{= ${books>AvailableQuantity} > 0 ? 'Success' : 'Error' }"/>
-                        <HBox justifyContent="Center">
-                            <Button text="{i18n>editTitleButton}" icon="sap-icon://edit"
-                                visible="{= !${books>editMode} }" press=".onEditTitle"/>
-                            <Button text="{i18n>saveTitleButton}" icon="sap-icon://save" type="Emphasized"
-                                visible="{= ${books>editMode} }" press=".onSaveTitle"/>
-                        </HBox>
-                    </cells>
-                </ColumnListItem>
+                <IconTabFilter id="jsonModelTab" text="JSON Model">
+                    <Table id="booksTable" items="{books>/books}" mode="MultiSelect" selectionChange=".onSelectionChange" class="sapUiResponsiveMargin" width="auto">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title id="booksTableTitle" text="{i18n>booksTableTitle} ({= ${books>/books}.length })" level="H2"/>
+                                <ToolbarSpacer/>
+                                <Button id="addRecordButton" text="{i18n>addRecordButton}" icon="sap-icon://add" press=".onAddRecord"/>
+                                <Button id="deleteRecordButton" text="{i18n>deleteRecordButton}" icon="sap-icon://delete" enabled="{books>/hasSelection}" press=".onDeleteRecord"/>
+                                <ToolbarSeparator/>
+                                <Input id="nameFilter" width="12rem" placeholder="{i18n>nameFilterPlaceholder}" submit=".onFilter"/>
+                                <Select id="genreFilter" items="{books>/genres}" autoAdjustWidth="true" tooltip="{i18n>genreFilterTooltip}">
+                                    <core:Item key="{books>key}" text="{books>text}"/>
+                                </Select>
+                                <Button id="filterButton" text="{i18n>filterButton}" icon="sap-icon://filter" type="Emphasized" press=".onFilter"/>
+                            </Toolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column width="6rem">
+                                <Text text="{i18n>columnId}"/>
+                            </Column>
+                            <Column>
+                                <Text text="{i18n>columnName}"/>
+                            </Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true">
+                                <Text text="{i18n>columnAuthor}"/>
+                            </Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true">
+                                <Text text="{i18n>columnGenre}"/>
+                            </Column>
+                            <Column minScreenWidth="Desktop" demandPopin="true">
+                                <Text text="{i18n>columnReleaseDate}"/>
+                            </Column>
+                            <Column hAlign="End">
+                                <Text text="{i18n>columnAvailableQuantity}"/>
+                            </Column>
+                            <Column width="9rem" hAlign="Center">
+                                <Text text="{i18n>columnActions}"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem vAlign="Middle">
+                                <cells>
+                                    <Text text="{books>ID}"/>
+                                    <HBox width="100%" alignItems="Center">
+                                        <ObjectIdentifier title="{books>Name}" visible="{= !${books>editMode} }"/>
+                                        <Input width="100%" value="{books>NameDraft}" visible="{= ${books>editMode} }" submit=".onSaveTitle"/>
+                                    </HBox>
+                                    <Text text="{books>Author}"/>
+                                    <Text text="{books>Genre}"/>
+                                    <Text text="{
+                                        path: 'books>ReleaseDate',
+                                        formatter: '.formatter.formatReleaseYear'
+                                    }"/>
+                                    <ObjectNumber number="{books>AvailableQuantity}"
+                                        state="{= ${books>AvailableQuantity} > 0 ? 'Success' : 'Error' }"/>
+                                    <HBox justifyContent="Center">
+                                        <Button text="{i18n>editTitleButton}" icon="sap-icon://edit"
+                                            visible="{= !${books>editMode} }" press=".onEditTitle"/>
+                                        <Button text="{i18n>saveTitleButton}" icon="sap-icon://save" type="Emphasized"
+                                            visible="{= ${books>editMode} }" press=".onSaveTitle"/>
+                                    </HBox>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </IconTabFilter>
+                <IconTabFilter id="odataV2ModelTab" text="oData v2 Model">
+                    <Table id="productsV2Table" items="{odataV2>/Products}" growing="true" class="sapUiResponsiveMargin" width="auto">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title id="productsV2TableTitle" text="Products" level="H2"/>
+                            </Toolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column width="6rem">
+                                <Text text="ID"/>
+                            </Column>
+                            <Column>
+                                <Text text="Name"/>
+                            </Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true">
+                                <Text text="Description"/>
+                            </Column>
+                            <Column minScreenWidth="Desktop" demandPopin="true">
+                                <Text text="Release Date"/>
+                            </Column>
+                            <Column hAlign="End">
+                                <Text text="Rating"/>
+                            </Column>
+                            <Column hAlign="End">
+                                <Text text="Price"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem vAlign="Middle">
+                                <cells>
+                                    <Text text="{odataV2>ID}"/>
+                                    <ObjectIdentifier title="{odataV2>Name}"/>
+                                    <Text text="{odataV2>Description}"/>
+                                    <Text text="{
+                                        path: 'odataV2>ReleaseDate',
+                                        formatter: '.formatter.formatDate'
+                                    }"/>
+                                    <Text text="{odataV2>Rating}"/>
+                                    <ObjectNumber number="{odataV2>Price}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </IconTabFilter>
+                <IconTabFilter id="odataV4ModelTab" text="oData v4 Model">
+                    <Table id="productsV4Table" items="{odataV4>/Products}" growing="true" class="sapUiResponsiveMargin" width="auto">
+                        <headerToolbar>
+                            <Toolbar>
+                                <Title id="productsV4TableTitle" text="Products" level="H2"/>
+                            </Toolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column width="6rem">
+                                <Text text="ID"/>
+                            </Column>
+                            <Column>
+                                <Text text="Name"/>
+                            </Column>
+                            <Column minScreenWidth="Tablet" demandPopin="true">
+                                <Text text="Description"/>
+                            </Column>
+                            <Column minScreenWidth="Desktop" demandPopin="true">
+                                <Text text="Release Date"/>
+                            </Column>
+                            <Column hAlign="End">
+                                <Text text="Rating"/>
+                            </Column>
+                            <Column hAlign="End">
+                                <Text text="Price"/>
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem vAlign="Middle">
+                                <cells>
+                                    <Text text="{odataV4>ID}"/>
+                                    <ObjectIdentifier title="{odataV4>Name}"/>
+                                    <Text text="{odataV4>Description}"/>
+                                    <Text text="{
+                                        path: 'odataV4>ReleaseDate',
+                                        formatter: '.formatter.formatDate'
+                                    }"/>
+                                    <Text text="{odataV4>Rating}"/>
+                                    <ObjectNumber number="{odataV4>Price}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </IconTabFilter>
             </items>
-        </Table>
+        </IconTabBar>
     </Page>
 </mvc:View>
