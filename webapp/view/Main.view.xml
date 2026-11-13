@@ -106,7 +106,7 @@
                                     <Text text="{odataV2>Description}"/>
                                     <Text text="{
                                         path: 'odataV2>ReleaseDate',
-                                        formatter: '.formatter.formatDate'
+                                        type: 'sap.ui.model.odata.type.DateTime'
                                     }"/>
                                     <Text text="{odataV2>Rating}"/>
                                     <ObjectNumber number="{odataV2>Price}"/>
@@ -150,7 +150,8 @@
                                     <Text text="{odataV4>Description}"/>
                                     <Text text="{
                                         path: 'odataV4>ReleaseDate',
-                                        formatter: '.formatter.formatDate'
+                                        type: 'sap.ui.model.odata.type.DateTimeOffset'
+                                        }
                                     }"/>
                                     <Text text="{odataV4>Rating}"/>
                                     <ObjectNumber number="{odataV4>Price}"/>

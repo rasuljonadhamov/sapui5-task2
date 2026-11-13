@@ -7,13 +7,5 @@ sap.ui.define([], () => {
 
       return this.getResourceBundle().getText("publishedYear", [sYear]);
     },
-
-    formatDate(vDate) {
-      if (!vDate) {
-        return "";
-      }
-
-      return new Date(vDate).toLocaleDateString();
-    },
   };
 });
