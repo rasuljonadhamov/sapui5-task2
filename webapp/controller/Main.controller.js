@@ -5,6 +5,7 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
     "../model/formatter",
   ],
   (
@@ -13,6 +14,7 @@ sap.ui.define(
     Filter,
     FilterOperator,
     MessageBox,
+    MessageToast,
     formatter,
   ) => {
     "use strict";
@@ -25,6 +27,8 @@ sap.ui.define(
       "newBookReleaseDate",
       "newBookQuantity",
     ];
+
+    const sDeleteGroup = "deleteProducts";
 
     return BaseController.extend("sapui5task2.controller.Main", {
       formatter,
@@ -94,6 +98,14 @@ sap.ui.define(
             hasSelection: false,
           }),
           "books",
+        );
+
+        this.setModel(new JSONModel({ hasProductsSelection: false }), "ui");
+
+        const oProductsModel = this.getOwnerComponent().getModel("odataV2");
+
+        oProductsModel.setDeferredGroups(
+          oProductsModel.getDeferredGroups().concat(sDeleteGroup),
         );
       },
 
@@ -167,6 +179,34 @@ sap.ui.define(
             );
             oTable.removeSelections(true);
             oModel.setProperty("/hasSelection", false);
+          },
+        });
+      },
+
+      onProductsSelectionChange(oEvent) {
+        this.getModel("ui").setProperty(
+          "/hasProductsSelection",
+          oEvent.getSource().getSelectedContexts().length > 0,
+        );
+      },
+
+      onDeleteProducts() {
+        const oTable = this.byId("productsV2Table");
+        const oModel = this.getModel("odataV2");
+
+        oTable.getSelectedContexts().forEach((oContext) => {
+          oModel.remove(oContext.getPath(), { groupId: sDeleteGroup });
+        });
+
+        oModel.submitChanges({
+          groupId: sDeleteGroup,
+          success: () => {
+            oTable.removeSelections(true);
+            this.getModel("ui").setProperty("/hasProductsSelection", false);
+            MessageToast.show("Selected product is deleted.");
+          },
+          error: () => {
+            MessageBox.error("Selected product can not be deleted.");
           },
         });
       },
