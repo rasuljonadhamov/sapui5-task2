@@ -72,10 +72,12 @@
                     </Table>
                 </IconTabFilter>
                 <IconTabFilter id="odataV2ModelTab" text="oData v2 Model">
-                    <Table id="productsV2Table" items="{odataV2>/Products}" growing="true" class="sapUiResponsiveMargin" width="auto">
+                    <Table id="productsV2Table" items="{odataV2>/Products}" mode="MultiSelect" selectionChange=".onProductsSelectionChange" growing="true" class="sapUiResponsiveMargin" width="auto">
                         <headerToolbar>
                             <Toolbar>
                                 <Title id="productsV2TableTitle" text="Products" level="H2"/>
+                                <ToolbarSpacer/>
+                                <Button id="deleteProductsButton" text="Delete" icon="sap-icon://delete" enabled="{ui>/hasProductsSelection}" press=".onDeleteProducts"/>
                             </Toolbar>
                         </headerToolbar>
                         <columns>
