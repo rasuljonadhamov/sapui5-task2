@@ -77,6 +77,7 @@
                             <Toolbar>
                                 <Title id="productsV2TableTitle" text="Products" level="H2"/>
                                 <ToolbarSpacer/>
+                                <Button id="addProductButton" text="Add Record" icon="sap-icon://add" press=".onAddProduct"/>
                                 <Button id="deleteProductsButton" text="Delete" icon="sap-icon://delete" enabled="{ui>/hasProductsSelection}" press=".onDeleteProducts"/>
                             </Toolbar>
                         </headerToolbar>

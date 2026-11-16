@@ -31,6 +31,14 @@ sap.ui.define(
           "newBookReleaseDate",
           "newBookQuantity",
         ];
+        this.aNewProductFieldIds = [
+          "newProductId",
+          "newProductName",
+          "newProductDescription",
+          "newProductReleaseDate",
+          "newProductRating",
+          "newProductPrice",
+        ];
         this.sDeleteGroup = "deleteProducts";
 
         const aBooks = [
@@ -182,6 +190,57 @@ sap.ui.define(
         });
       },
 
+      async onAddProduct() {
+        if (!this._oAddProductDialog) {
+          this._oAddProductDialog = await this.loadFragment({
+            name: "sapui5task2.view.AddProductDialog",
+          });
+        }
+
+        this._oAddProductDialog.open();
+      },
+
+      onSaveProduct() {
+        const oResults = this.aNewProductFieldIds.map((sId) =>
+          this._validateControl(this.byId(sId)),
+        );
+
+        if (oResults.includes(false)) {
+          return;
+        }
+
+        const oProduct = {
+          ID: Number(this.byId("newProductId").getValue()),
+          Name: this.byId("newProductName").getValue().trim(),
+          Description: this.byId("newProductDescription").getValue().trim(),
+          ReleaseDate: this.byId("newProductReleaseDate").getDateValue(),
+          Rating: Number(this.byId("newProductRating").getValue()),
+          Price: this.byId("newProductPrice").getValue().trim(),
+        };
+
+        this.getModel("odataV2").create("/Products", oProduct, {
+          success: () => {
+            this._closeAddProductDialog();
+            MessageToast.show("New product is created.");
+          },
+          error: () => {
+            MessageBox.error("New product can not be created.");
+          },
+        });
+      },
+
+      onCancelAddProduct() {
+        this._closeAddProductDialog();
+      },
+
+      onProductFieldChange(oEvent) {
+        const oField = oEvent.getSource();
+
+        if (oField.getValue().trim()) {
+          oField.setValueState("None");
+        }
+      },
+
       onProductsSelectionChange(oEvent) {
         this.getModel("ui").setProperty(
           "/hasProductsSelection",
@@ -300,6 +359,17 @@ sap.ui.define(
         });
 
         this._oAddBookDialog.close();
+      },
+
+      _closeAddProductDialog() {
+        this.aNewProductFieldIds.forEach((sFieldId) => {
+          const oField = this.byId(sFieldId);
+
+          oField.setValue("");
+          oField.setValueState("None");
+        });
+
+        this._oAddProductDialog.close();
       },
 
       /**
