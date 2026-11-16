@@ -5,6 +5,7 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/m/MessageBox",
+    "sap/m/MessageToast",
     "../model/formatter",
   ],
   (
@@ -13,23 +14,25 @@ sap.ui.define(
     Filter,
     FilterOperator,
     MessageBox,
+    MessageToast,
     formatter,
   ) => {
     "use strict";
-
-    const aNewBookFieldIds = [
-      "newBookId",
-      "newBookName",
-      "newBookAuthor",
-      "newBookGenre",
-      "newBookReleaseDate",
-      "newBookQuantity",
-    ];
 
     return BaseController.extend("sapui5task2.controller.Main", {
       formatter,
 
       onInit() {
+        this.aNewBookFieldIds = [
+          "newBookId",
+          "newBookName",
+          "newBookAuthor",
+          "newBookGenre",
+          "newBookReleaseDate",
+          "newBookQuantity",
+        ];
+        this.sDeleteGroup = "deleteProducts";
+
         const aBooks = [
           {
             ID: "B001",
@@ -95,6 +98,14 @@ sap.ui.define(
           }),
           "books",
         );
+
+        this.setModel(new JSONModel({ hasProductsSelection: false }), "ui");
+
+        const oProductsModel = this.getOwnerComponent().getModel("odataV2");
+
+        oProductsModel.setDeferredGroups(
+          oProductsModel.getDeferredGroups().concat(this.sDeleteGroup),
+        );
       },
 
       async onAddRecord() {
@@ -108,7 +119,7 @@ sap.ui.define(
       },
 
       onAddBook() {
-        const oResults = aNewBookFieldIds.map((sId) =>
+        const oResults = this.aNewBookFieldIds.map((sId) =>
           this._validateControl(this.byId(sId)),
         );
 
@@ -169,6 +180,52 @@ sap.ui.define(
             oModel.setProperty("/hasSelection", false);
           },
         });
+      },
+
+      onProductsSelectionChange(oEvent) {
+        this.getModel("ui").setProperty(
+          "/hasProductsSelection",
+          oEvent.getSource().getSelectedContexts().length > 0,
+        );
+      },
+
+      onDeleteProducts() {
+        const oTable = this.byId("productsV2Table");
+        const oModel = this.getModel("odataV2");
+        const aSelectedContexts = oTable.getSelectedContexts();
+
+        MessageBox.confirm(
+          "Are you sure you want to delete selected records?",
+          {
+            title: "Confirm Deletion",
+            onClose: (sAction) => {
+              if (sAction !== MessageBox.Action.OK) {
+                return;
+              }
+
+              aSelectedContexts.forEach((oContext) => {
+                oModel.remove(oContext.getPath(), {
+                  groupId: this.sDeleteGroup,
+                });
+              });
+
+              oModel.submitChanges({
+                groupId: this.sDeleteGroup,
+                success: () => {
+                  oTable.removeSelections(true);
+                  this.getModel("ui").setProperty(
+                    "/hasProductsSelection",
+                    false,
+                  );
+                  MessageToast.show("Selected product is deleted.");
+                },
+                error: () => {
+                  MessageBox.error("Selected product can not be deleted.");
+                },
+              });
+            },
+          },
+        );
       },
 
       /**
@@ -235,7 +292,7 @@ sap.ui.define(
       },
 
       _closeAddBookDialog() {
-        aNewBookFieldIds.forEach((sFieldId) => {
+        this.aNewBookFieldIds.forEach((sFieldId) => {
           const oField = this.byId(sFieldId);
 
           oField.setValue("");
