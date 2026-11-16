@@ -1,33 +1,33 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:core="sap.ui.core">
-    <Dialog id="addProductDialog" title="New Product" contentWidth="24rem">
+    <Dialog id="addProductDialog" title="{i18n>addProductDialogTitle}" contentWidth="24rem">
         <content>
             <VBox id="addProductForm" class="sapUiSmallMargin">
-                <Label id="newProductIdLabel" text="ID" labelFor="newProductId" required="true"/>
-                <Input id="newProductId" type="Number" valueStateText="Enter a valid ID." liveChange=".onProductFieldChange"/>
+                <Label id="newProductIdLabel" text="{i18n>newProductIdLabel}" labelFor="newProductId" required="true"/>
+                <Input id="newProductId" type="Number" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
 
-                <Label id="newProductNameLabel" text="Name" labelFor="newProductName" required="true" class="sapUiSmallMarginTop"/>
-                <Input id="newProductName" valueStateText="Name is required." liveChange=".onProductFieldChange"/>
+                <Label id="newProductNameLabel" text="{i18n>newProductNameLabel}" labelFor="newProductName" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductName" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
 
-                <Label id="newProductDescriptionLabel" text="Description" labelFor="newProductDescription" required="true" class="sapUiSmallMarginTop"/>
-                <Input id="newProductDescription" valueStateText="Description is required." liveChange=".onProductFieldChange"/>
+                <Label id="newProductDescriptionLabel" text="{i18n>newProductDescriptionLabel}" labelFor="newProductDescription" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductDescription" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
 
-                <Label id="newProductReleaseDateLabel" text="Release Date" labelFor="newProductReleaseDate" required="true" class="sapUiSmallMarginTop"/>
-                <DatePicker id="newProductReleaseDate" valueFormat="yyyy-MM-dd" displayFormat="medium" valueStateText="Enter a valid release date." change=".onProductFieldChange"/>
+                <Label id="newProductReleaseDateLabel" text="{i18n>newProductReleaseDateLabel}" labelFor="newProductReleaseDate" required="true" class="sapUiSmallMarginTop"/>
+                <DatePicker id="newProductReleaseDate" valueFormat="yyyy-MM-dd" displayFormat="medium" valueStateText="{i18n>emptyFieldValueStateText}" change=".onProductFieldChange"/>
 
-                <Label id="newProductRatingLabel" text="Rating" labelFor="newProductRating" required="true" class="sapUiSmallMarginTop"/>
-                <Input id="newProductRating" type="Number" valueStateText="Enter a valid rating." liveChange=".onProductFieldChange"/>
+                <Label id="newProductRatingLabel" text="{i18n>newProductRatingLabel}" labelFor="newProductRating" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductRating" type="Number" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
 
-                <Label id="newProductPriceLabel" text="Price" labelFor="newProductPrice" required="true" class="sapUiSmallMarginTop"/>
-                <Input id="newProductPrice" type="Number" valueStateText="Enter a valid price." liveChange=".onProductFieldChange"/>
+                <Label id="newProductPriceLabel" text="{i18n>newProductPriceLabel}" labelFor="newProductPrice" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductPrice" type="Number" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
             </VBox>
         </content>
         <beginButton>
-            <Button id="saveProductButton" text="Save" type="Emphasized" press=".onSaveProduct"/>
+            <Button id="saveProductButton" text="{i18n>saveButton}" type="Emphasized" press=".onSaveProduct"/>
         </beginButton>
         <endButton>
-            <Button id="cancelAddProductButton" text="Cancel" press=".onCancelAddProduct"/>
+            <Button id="cancelAddProductButton" text="{i18n>cancelButton}" press=".onCancelAddProduct"/>
         </endButton>
     </Dialog>
 </core:FragmentDefinition>

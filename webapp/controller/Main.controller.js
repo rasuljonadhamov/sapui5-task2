@@ -209,6 +209,7 @@ sap.ui.define(
           return;
         }
 
+        const oResourceBundle = this.getResourceBundle();
         const oProduct = {
           ID: Number(this.byId("newProductId").getValue()),
           Name: this.byId("newProductName").getValue().trim(),
@@ -221,10 +222,12 @@ sap.ui.define(
         this.getModel("odataV2").create("/Products", oProduct, {
           success: () => {
             this._closeAddProductDialog();
-            MessageToast.show("New product is created.");
+            MessageToast.show(
+              oResourceBundle.getText("createProductSuccessText"),
+            );
           },
           error: () => {
-            MessageBox.error("New product can not be created.");
+            MessageBox.error(oResourceBundle.getText("createProductErrorText"));
           },
         });
       },
@@ -251,40 +254,37 @@ sap.ui.define(
       onDeleteProducts() {
         const oTable = this.byId("productsV2Table");
         const oModel = this.getModel("odataV2");
+        const oResourceBundle = this.getResourceBundle();
         const aSelectedContexts = oTable.getSelectedContexts();
 
-        MessageBox.confirm(
-          "Are you sure you want to delete selected records?",
-          {
-            title: "Confirm Deletion",
-            onClose: (sAction) => {
-              if (sAction !== MessageBox.Action.OK) {
-                return;
-              }
+        MessageBox.confirm(oResourceBundle.getText("deleteConfirmationText"), {
+          title: oResourceBundle.getText("deleteConfirmationTitle"),
+          onClose: (sAction) => {
+            if (sAction !== MessageBox.Action.OK) {
+              return;
+            }
 
-              aSelectedContexts.forEach((oContext) => {
-                oModel.remove(oContext.getPath(), {
-                  groupId: this.sDeleteGroup,
-                });
-              });
+            aSelectedContexts.forEach((oContext) => {
+              oModel.remove(oContext.getPath(), { groupId: this.sDeleteGroup });
+            });
 
-              oModel.submitChanges({
-                groupId: this.sDeleteGroup,
-                success: () => {
-                  oTable.removeSelections(true);
-                  this.getModel("ui").setProperty(
-                    "/hasProductsSelection",
-                    false,
-                  );
-                  MessageToast.show("Selected product is deleted.");
-                },
-                error: () => {
-                  MessageBox.error("Selected product can not be deleted.");
-                },
-              });
-            },
+            oModel.submitChanges({
+              groupId: this.sDeleteGroup,
+              success: () => {
+                oTable.removeSelections(true);
+                this.getModel("ui").setProperty("/hasProductsSelection", false);
+                MessageToast.show(
+                  oResourceBundle.getText("deleteProductSuccessText"),
+                );
+              },
+              error: () => {
+                MessageBox.error(
+                  oResourceBundle.getText("deleteProductErrorText"),
+                );
+              },
+            });
           },
-        );
+        });
       },
 
       /**
