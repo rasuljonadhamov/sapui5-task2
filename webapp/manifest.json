@@ -72,7 +72,10 @@
       },
       "odataV2": {
         "dataSource": "odataV2",
-        "preload": true
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
       },
       "odataV4": {
         "dataSource": "odataV4",

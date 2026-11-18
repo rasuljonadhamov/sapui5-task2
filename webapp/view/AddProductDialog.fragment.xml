@@ -1,11 +1,11 @@
 <core:FragmentDefinition
     xmlns="sap.m"
     xmlns:core="sap.ui.core">
-    <Dialog id="addProductDialog" title="{i18n>addProductDialogTitle}" contentWidth="24rem">
+    <Dialog id="addProductDialog" title="{= ${ui>/isProductEdit} ? ${i18n>editProductDialogTitle} : ${i18n>addProductDialogTitle} }" contentWidth="24rem">
         <content>
             <VBox id="addProductForm" class="sapUiSmallMargin">
                 <Label id="newProductIdLabel" text="{i18n>newProductIdLabel}" labelFor="newProductId" required="true"/>
-                <Input id="newProductId" type="Number" value="{path: 'odataV2>ID', type: 'sap.ui.model.odata.type.Int32'}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+                <Input id="newProductId" type="Number" editable="{= !${ui>/isProductEdit} }" value="{path: 'odataV2>ID', type: 'sap.ui.model.odata.type.Int32', formatOptions: {groupingEnabled: false}}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
 
                 <Label id="newProductNameLabel" text="{i18n>newProductNameLabel}" labelFor="newProductName" required="true" class="sapUiSmallMarginTop"/>
                 <Input id="newProductName" value="{odataV2>Name}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
@@ -17,7 +17,7 @@
                 <DatePicker id="newProductReleaseDate" valueFormat="yyyy-MM-dd" displayFormat="medium" dateValue="{odataV2>ReleaseDate}" valueStateText="{i18n>emptyFieldValueStateText}" change=".onProductFieldChange"/>
 
                 <Label id="newProductRatingLabel" text="{i18n>newProductRatingLabel}" labelFor="newProductRating" required="true" class="sapUiSmallMarginTop"/>
-                <Input id="newProductRating" type="Number" value="{path: 'odataV2>Rating', type: 'sap.ui.model.odata.type.Int32'}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+                <Input id="newProductRating" type="Number" value="{path: 'odataV2>Rating', type: 'sap.ui.model.odata.type.Int32', formatOptions: {groupingEnabled: false}}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
 
                 <Label id="newProductPriceLabel" text="{i18n>newProductPriceLabel}" labelFor="newProductPrice" required="true" class="sapUiSmallMarginTop"/>
                 <Input id="newProductPrice" type="Number" value="{odataV2>Price}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
@@ -27,7 +27,7 @@
             <Button id="saveProductButton" text="{i18n>saveButton}" type="Emphasized" press=".onSaveProduct"/>
         </beginButton>
         <endButton>
-            <Button id="cancelAddProductButton" text="{i18n>cancelButton}" press=".onCancelAddProduct"/>
+            <Button id="cancelAddProductButton" text="{i18n>cancelButton}" press=".onCancelProduct"/>
         </endButton>
     </Dialog>
 </core:FragmentDefinition>
