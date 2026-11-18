@@ -197,6 +197,11 @@ sap.ui.define(
           });
         }
 
+        const oContext = this.getModel("odataV2").createEntry("/Products", {
+          properties: {},
+        });
+
+        this._oAddProductDialog.setBindingContext(oContext, "odataV2");
         this._oAddProductDialog.open();
       },
 
@@ -210,16 +215,8 @@ sap.ui.define(
         }
 
         const oResourceBundle = this.getResourceBundle();
-        const oProduct = {
-          ID: Number(this.byId("newProductId").getValue()),
-          Name: this.byId("newProductName").getValue().trim(),
-          Description: this.byId("newProductDescription").getValue().trim(),
-          ReleaseDate: this.byId("newProductReleaseDate").getDateValue(),
-          Rating: Number(this.byId("newProductRating").getValue()),
-          Price: this.byId("newProductPrice").getValue().trim(),
-        };
 
-        this.getModel("odataV2").create("/Products", oProduct, {
+        this.getModel("odataV2").submitChanges({
           success: () => {
             this._closeAddProductDialog();
             MessageToast.show(
@@ -233,6 +230,9 @@ sap.ui.define(
       },
 
       onCancelAddProduct() {
+        this.getModel("odataV2").deleteCreatedEntry(
+          this._oAddProductDialog.getBindingContext("odataV2"),
+        );
         this._closeAddProductDialog();
       },
 
@@ -363,12 +363,10 @@ sap.ui.define(
 
       _closeAddProductDialog() {
         this.aNewProductFieldIds.forEach((sFieldId) => {
-          const oField = this.byId(sFieldId);
-
-          oField.setValue("");
-          oField.setValueState("None");
+          this.byId(sFieldId).setValueState("None");
         });
 
+        this._oAddProductDialog.setBindingContext(null, "odataV2");
         this._oAddProductDialog.close();
       },
 
