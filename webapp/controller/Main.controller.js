@@ -31,6 +31,14 @@ sap.ui.define(
           "newBookReleaseDate",
           "newBookQuantity",
         ];
+        this.aNewProductFieldIds = [
+          "newProductId",
+          "newProductName",
+          "newProductDescription",
+          "newProductReleaseDate",
+          "newProductRating",
+          "newProductPrice",
+        ];
         this.sDeleteGroup = "deleteProducts";
 
         const aBooks = [
@@ -182,6 +190,60 @@ sap.ui.define(
         });
       },
 
+      async onAddProduct() {
+        if (!this._oAddProductDialog) {
+          this._oAddProductDialog = await this.loadFragment({
+            name: "sapui5task2.view.AddProductDialog",
+          });
+        }
+
+        const oContext = this.getModel("odataV2").createEntry("/Products", {
+          properties: {},
+        });
+
+        this._oAddProductDialog.setBindingContext(oContext, "odataV2");
+        this._oAddProductDialog.open();
+      },
+
+      onSaveProduct() {
+        const oResults = this.aNewProductFieldIds.map((sId) =>
+          this._validateControl(this.byId(sId)),
+        );
+
+        if (oResults.includes(false)) {
+          return;
+        }
+
+        const oResourceBundle = this.getResourceBundle();
+
+        this.getModel("odataV2").submitChanges({
+          success: () => {
+            this._closeAddProductDialog();
+            MessageToast.show(
+              oResourceBundle.getText("createProductSuccessText"),
+            );
+          },
+          error: () => {
+            MessageBox.error(oResourceBundle.getText("createProductErrorText"));
+          },
+        });
+      },
+
+      onCancelAddProduct() {
+        this.getModel("odataV2").deleteCreatedEntry(
+          this._oAddProductDialog.getBindingContext("odataV2"),
+        );
+        this._closeAddProductDialog();
+      },
+
+      onProductFieldChange(oEvent) {
+        const oField = oEvent.getSource();
+
+        if (oField.getValue().trim()) {
+          oField.setValueState("None");
+        }
+      },
+
       onProductsSelectionChange(oEvent) {
         this.getModel("ui").setProperty(
           "/hasProductsSelection",
@@ -192,40 +254,37 @@ sap.ui.define(
       onDeleteProducts() {
         const oTable = this.byId("productsV2Table");
         const oModel = this.getModel("odataV2");
+        const oResourceBundle = this.getResourceBundle();
         const aSelectedContexts = oTable.getSelectedContexts();
 
-        MessageBox.confirm(
-          "Are you sure you want to delete selected records?",
-          {
-            title: "Confirm Deletion",
-            onClose: (sAction) => {
-              if (sAction !== MessageBox.Action.OK) {
-                return;
-              }
+        MessageBox.confirm(oResourceBundle.getText("deleteConfirmationText"), {
+          title: oResourceBundle.getText("deleteConfirmationTitle"),
+          onClose: (sAction) => {
+            if (sAction !== MessageBox.Action.OK) {
+              return;
+            }
 
-              aSelectedContexts.forEach((oContext) => {
-                oModel.remove(oContext.getPath(), {
-                  groupId: this.sDeleteGroup,
-                });
-              });
+            aSelectedContexts.forEach((oContext) => {
+              oModel.remove(oContext.getPath(), { groupId: this.sDeleteGroup });
+            });
 
-              oModel.submitChanges({
-                groupId: this.sDeleteGroup,
-                success: () => {
-                  oTable.removeSelections(true);
-                  this.getModel("ui").setProperty(
-                    "/hasProductsSelection",
-                    false,
-                  );
-                  MessageToast.show("Selected product is deleted.");
-                },
-                error: () => {
-                  MessageBox.error("Selected product can not be deleted.");
-                },
-              });
-            },
+            oModel.submitChanges({
+              groupId: this.sDeleteGroup,
+              success: () => {
+                oTable.removeSelections(true);
+                this.getModel("ui").setProperty("/hasProductsSelection", false);
+                MessageToast.show(
+                  oResourceBundle.getText("deleteProductSuccessText"),
+                );
+              },
+              error: () => {
+                MessageBox.error(
+                  oResourceBundle.getText("deleteProductErrorText"),
+                );
+              },
+            });
           },
-        );
+        });
       },
 
       /**
@@ -300,6 +359,15 @@ sap.ui.define(
         });
 
         this._oAddBookDialog.close();
+      },
+
+      _closeAddProductDialog() {
+        this.aNewProductFieldIds.forEach((sFieldId) => {
+          this.byId(sFieldId).setValueState("None");
+        });
+
+        this._oAddProductDialog.setBindingContext(null, "odataV2");
+        this._oAddProductDialog.close();
       },
 
       /**

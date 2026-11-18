@@ -1,0 +1,33 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Dialog id="addProductDialog" title="{i18n>addProductDialogTitle}" contentWidth="24rem">
+        <content>
+            <VBox id="addProductForm" class="sapUiSmallMargin">
+                <Label id="newProductIdLabel" text="{i18n>newProductIdLabel}" labelFor="newProductId" required="true"/>
+                <Input id="newProductId" type="Number" value="{path: 'odataV2>ID', type: 'sap.ui.model.odata.type.Int32'}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductNameLabel" text="{i18n>newProductNameLabel}" labelFor="newProductName" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductName" value="{odataV2>Name}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductDescriptionLabel" text="{i18n>newProductDescriptionLabel}" labelFor="newProductDescription" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductDescription" value="{odataV2>Description}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductReleaseDateLabel" text="{i18n>newProductReleaseDateLabel}" labelFor="newProductReleaseDate" required="true" class="sapUiSmallMarginTop"/>
+                <DatePicker id="newProductReleaseDate" valueFormat="yyyy-MM-dd" displayFormat="medium" dateValue="{odataV2>ReleaseDate}" valueStateText="{i18n>emptyFieldValueStateText}" change=".onProductFieldChange"/>
+
+                <Label id="newProductRatingLabel" text="{i18n>newProductRatingLabel}" labelFor="newProductRating" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductRating" type="Number" value="{path: 'odataV2>Rating', type: 'sap.ui.model.odata.type.Int32'}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductPriceLabel" text="{i18n>newProductPriceLabel}" labelFor="newProductPrice" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductPrice" type="Number" value="{odataV2>Price}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button id="saveProductButton" text="{i18n>saveButton}" type="Emphasized" press=".onSaveProduct"/>
+        </beginButton>
+        <endButton>
+            <Button id="cancelAddProductButton" text="{i18n>cancelButton}" press=".onCancelAddProduct"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
