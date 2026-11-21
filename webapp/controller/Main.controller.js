@@ -31,7 +31,7 @@ sap.ui.define(
           "newBookReleaseDate",
           "newBookQuantity",
         ];
-        this.aNewProductFieldIds = [
+        this.aProductFieldIds = [
           "newProductId",
           "newProductName",
           "newProductDescription",
@@ -107,7 +107,10 @@ sap.ui.define(
           "books",
         );
 
-        this.setModel(new JSONModel({ hasProductsSelection: false }), "ui");
+        this.setModel(
+          new JSONModel({ hasProductsSelection: false, isProductEdit: false }),
+          "ui",
+        );
 
         const oProductsModel = this.getOwnerComponent().getModel("odataV2");
 
@@ -191,22 +194,21 @@ sap.ui.define(
       },
 
       async onAddProduct() {
-        if (!this._oAddProductDialog) {
-          this._oAddProductDialog = await this.loadFragment({
-            name: "sapui5task2.view.AddProductDialog",
-          });
-        }
-
         const oContext = this.getModel("odataV2").createEntry("/Products", {
           properties: {},
         });
 
-        this._oAddProductDialog.setBindingContext(oContext, "odataV2");
-        this._oAddProductDialog.open();
+        await this._openProductDialog(oContext, false);
+      },
+
+      async onEditProduct(oEvent) {
+        const oContext = oEvent.getSource().getBindingContext("odataV2");
+
+        await this._openProductDialog(oContext, true);
       },
 
       onSaveProduct() {
-        const oResults = this.aNewProductFieldIds.map((sId) =>
+        const oResults = this.aProductFieldIds.map((sId) =>
           this._validateControl(this.byId(sId)),
         );
 
@@ -215,25 +217,36 @@ sap.ui.define(
         }
 
         const oResourceBundle = this.getResourceBundle();
+        const bEdit = this.getModel("ui").getProperty("/isProductEdit");
+        const sSuccessText = bEdit
+          ? oResourceBundle.getText("updateProductSuccessText")
+          : oResourceBundle.getText("createProductSuccessText");
+        const sErrorText = bEdit
+          ? oResourceBundle.getText("updateProductErrorText")
+          : oResourceBundle.getText("createProductErrorText");
 
         this.getModel("odataV2").submitChanges({
           success: () => {
-            this._closeAddProductDialog();
-            MessageToast.show(
-              oResourceBundle.getText("createProductSuccessText"),
-            );
+            this._closeProductDialog();
+            MessageToast.show(sSuccessText);
           },
           error: () => {
-            MessageBox.error(oResourceBundle.getText("createProductErrorText"));
+            MessageBox.error(sErrorText);
           },
         });
       },
 
-      onCancelAddProduct() {
-        this.getModel("odataV2").deleteCreatedEntry(
-          this._oAddProductDialog.getBindingContext("odataV2"),
-        );
-        this._closeAddProductDialog();
+      onCancelProduct() {
+        const oModel = this.getModel("odataV2");
+        const oContext = this._oProductDialog.getBindingContext("odataV2");
+
+        if (this.getModel("ui").getProperty("/isProductEdit")) {
+          oModel.resetChanges([oContext.getPath()]);
+        } else {
+          oModel.deleteCreatedEntry(oContext);
+        }
+
+        this._closeProductDialog();
       },
 
       onProductFieldChange(oEvent) {
@@ -361,13 +374,25 @@ sap.ui.define(
         this._oAddBookDialog.close();
       },
 
-      _closeAddProductDialog() {
-        this.aNewProductFieldIds.forEach((sFieldId) => {
+      async _openProductDialog(oContext, bEdit) {
+        if (!this._oProductDialog) {
+          this._oProductDialog = await this.loadFragment({
+            name: "sapui5task2.view.AddProductDialog",
+          });
+        }
+
+        this.getModel("ui").setProperty("/isProductEdit", bEdit);
+        this._oProductDialog.setBindingContext(oContext, "odataV2");
+        this._oProductDialog.open();
+      },
+
+      _closeProductDialog() {
+        this.aProductFieldIds.forEach((sFieldId) => {
           this.byId(sFieldId).setValueState("None");
         });
 
-        this._oAddProductDialog.setBindingContext(null, "odataV2");
-        this._oAddProductDialog.close();
+        this._oProductDialog.setBindingContext(null, "odataV2");
+        this._oProductDialog.close();
       },
 
       /**

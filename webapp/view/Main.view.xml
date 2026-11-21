@@ -100,6 +100,9 @@
                             <Column hAlign="End">
                                 <Text text="Price"/>
                             </Column>
+                            <Column width="6rem" hAlign="Center">
+                                <Text text="{i18n>columnActions}"/>
+                            </Column>
                         </columns>
                         <items>
                             <ColumnListItem vAlign="Middle">
@@ -113,6 +116,7 @@
                                     }"/>
                                     <Text text="{odataV2>Rating}"/>
                                     <ObjectNumber number="{odataV2>Price}"/>
+                                    <Button text="{i18n>editButton}" icon="sap-icon://edit" press=".onEditProduct"/>
                                 </cells>
                             </ColumnListItem>
                         </items>
