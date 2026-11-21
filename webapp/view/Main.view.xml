@@ -79,6 +79,8 @@
                                 <ToolbarSpacer/>
                                 <Button id="addProductButton" text="{i18n>addRecordButton}" icon="sap-icon://add" press=".onAddProduct"/>
                                 <Button id="deleteProductsButton" text="{i18n>deleteProductsButton}" icon="sap-icon://delete" enabled="{ui>/hasProductsSelection}" press=".onDeleteProducts"/>
+                                <ToolbarSeparator/>
+                                <Input id="productNameFilter" width="12rem" placeholder="{i18n>productNameFilterPlaceholder}" liveChange=".onFilterProducts"/>
                             </Toolbar>
                         </headerToolbar>
                         <columns>
