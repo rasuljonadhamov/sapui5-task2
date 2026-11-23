@@ -346,6 +346,17 @@ sap.ui.define(
         this.byId("booksTable").getBinding("items").filter(aFilters);
       },
 
+      onFilterProducts(oEvent) {
+        const sName = oEvent.getParameter("newValue").trim();
+        const aFilters = [];
+
+        if (sName) {
+          aFilters.push(new Filter("Name", FilterOperator.Contains, sName));
+        }
+
+        this.byId("productsV2Table").getBinding("items").filter(aFilters);
+      },
+
       _validateControl(oControl) {
         const sValue = oControl.getValue().trim();
         let bIsValid = false;
