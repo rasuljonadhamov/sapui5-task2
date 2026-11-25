@@ -3,9 +3,9 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m">
     <Page id="page" title="{i18n>title}">
-        <IconTabBar id="modelTabBar">
+        <IconTabBar id="modelTabBar" select=".onTabSelect">
             <items>
-                <IconTabFilter id="jsonModelTab" text="JSON Model">
+                <IconTabFilter id="jsonModelTab" key="json" text="JSON Model">
                     <Table id="booksTable" items="{books>/books}" mode="MultiSelect" selectionChange=".onSelectionChange" class="sapUiResponsiveMargin" width="auto">
                         <headerToolbar>
                             <Toolbar>
@@ -71,7 +71,7 @@
                         </items>
                     </Table>
                 </IconTabFilter>
-                <IconTabFilter id="odataV2ModelTab" text="oData v2 Model">
+                <IconTabFilter id="odataV2ModelTab" key="odataV2" text="oData v2 Model">
                     <Table id="productsV2Table" items="{odataV2>/Products}" mode="MultiSelect" selectionChange=".onProductsSelectionChange" growing="true" class="sapUiResponsiveMargin" width="auto">
                         <headerToolbar>
                             <Toolbar>
@@ -124,7 +124,7 @@
                         </items>
                     </Table>
                 </IconTabFilter>
-                <IconTabFilter id="odataV4ModelTab" text="oData v4 Model">
+                <IconTabFilter id="odataV4ModelTab" key="odataV4" text="oData v4 Model">
                     <Table id="productsV4Table" items="{odataV4>/Products}" growing="true" class="sapUiResponsiveMargin" width="auto">
                         <headerToolbar>
                             <Toolbar>
