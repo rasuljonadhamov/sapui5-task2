@@ -117,6 +117,19 @@ sap.ui.define(
         oProductsModel.setDeferredGroups(
           oProductsModel.getDeferredGroups().concat(this.sDeleteGroup),
         );
+
+        const oRouter = this.getOwnerComponent().getRouter();
+
+        oRouter
+          .getRoute("RouteMain")
+          .attachPatternMatched(this._onMainMatched, this);
+        oRouter
+          .getRoute("RouteTab")
+          .attachPatternMatched(this._onTabMatched, this);
+      },
+
+      onTabSelect(oEvent) {
+        this._navToTab(oEvent.getParameter("selectedKey"));
       },
 
       async onAddRecord() {
@@ -355,6 +368,30 @@ sap.ui.define(
         }
 
         this.byId("productsV2Table").getBinding("items").filter(aFilters);
+      },
+
+      _onMainMatched() {
+        this._navToTab(this.byId("modelTabBar").getSelectedKey(), true);
+      },
+
+      _onTabMatched(oEvent) {
+        const sTabKey = oEvent.getParameter("arguments").tabKey;
+        const oTabBar = this.byId("modelTabBar");
+        const bKnownTab = oTabBar
+          .getItems()
+          .some((oItem) => oItem.getKey() === sTabKey);
+
+        if (bKnownTab) {
+          oTabBar.setSelectedKey(sTabKey);
+        } else {
+          this._navToTab(oTabBar.getSelectedKey(), true);
+        }
+      },
+
+      _navToTab(sTabKey, bReplace) {
+        this.getOwnerComponent()
+          .getRouter()
+          .navTo("RouteTab", { tabKey: sTabKey }, bReplace);
       },
 
       _validateControl(oControl) {
