@@ -130,6 +130,7 @@
                             <Toolbar>
                                 <Title id="productsV4TableTitle" text="Products" level="H2"/>
                                 <ToolbarSpacer/>
+                                <Button id="addProductV4Button" text="{i18n>addRecordButton}" icon="sap-icon://add" press=".onAddProductV4"/>
                                 <Button id="deleteProductsV4Button" text="{i18n>deleteProductsButton}" icon="sap-icon://delete" enabled="{ui>/hasProductsV4Selection}" press=".onDeleteProductsV4"/>
                             </Toolbar>
                         </headerToolbar>
@@ -162,7 +163,6 @@
                                     <Text text="{
                                         path: 'odataV4>ReleaseDate',
                                         type: 'sap.ui.model.odata.type.DateTimeOffset'
-                                        }
                                     }"/>
                                     <Text text="{odataV4>Rating}"/>
                                     <ObjectNumber number="{odataV4>Price}"/>

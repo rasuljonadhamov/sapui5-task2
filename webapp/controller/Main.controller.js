@@ -39,6 +39,14 @@ sap.ui.define(
           "newProductRating",
           "newProductPrice",
         ];
+        this.aProductV4FieldIds = [
+          "newProductV4Id",
+          "newProductV4Name",
+          "newProductV4Description",
+          "newProductV4ReleaseDate",
+          "newProductV4Rating",
+          "newProductV4Price",
+        ];
         this.sDeleteGroup = "deleteProducts";
 
         const aBooks = [
@@ -112,6 +120,7 @@ sap.ui.define(
             hasProductsSelection: false,
             hasProductsV4Selection: false,
             isProductEdit: false,
+            newProductV4: {},
           }),
           "ui",
         );
@@ -362,6 +371,63 @@ sap.ui.define(
         });
       },
 
+      async onAddProductV4() {
+        if (!this._oProductV4Dialog) {
+          this._oProductV4Dialog = await this.loadFragment({
+            name: "sapui5task2.view.AddProductV4Dialog",
+          });
+        }
+
+        this.getModel("ui").setProperty("/newProductV4", {
+          ID: "",
+          Name: "",
+          Description: "",
+          ReleaseDate: "",
+          Rating: "",
+          Price: "",
+        });
+        this._oProductV4Dialog.open();
+      },
+
+      onSaveProductV4() {
+        const oResults = this.aProductV4FieldIds.map((sId) =>
+          this._validateControl(this.byId(sId)),
+        );
+
+        if (oResults.includes(false)) {
+          return;
+        }
+
+        const oNewProduct = this.getModel("ui").getProperty("/newProductV4");
+        const oBinding = this.byId("productsV4Table").getBinding("items");
+        const oResourceBundle = this.getResourceBundle();
+
+        oBinding.attachEventOnce("createCompleted", (oEvent) => {
+          if (oEvent.getParameter("success")) {
+            this._closeProductV4Dialog();
+            MessageToast.show(
+              oResourceBundle.getText("createProductSuccessText"),
+            );
+          } else {
+            oEvent.getParameter("context").delete();
+            MessageBox.error(oResourceBundle.getText("createProductErrorText"));
+          }
+        });
+
+        oBinding.create({
+          ID: Number(oNewProduct.ID),
+          Name: oNewProduct.Name.trim(),
+          Description: oNewProduct.Description.trim(),
+          ReleaseDate: `${oNewProduct.ReleaseDate}T00:00:00Z`,
+          Rating: Number(oNewProduct.Rating),
+          Price: Number(oNewProduct.Price),
+        });
+      },
+
+      onCancelProductV4() {
+        this._closeProductV4Dialog();
+      },
+
       /**
        * Switches the row of the pressed button into edit mode. The name is copied into
        * a draft property first, so the model keeps the saved name until the user
@@ -501,6 +567,14 @@ sap.ui.define(
 
         this._oProductDialog.setBindingContext(null, "odataV2");
         this._oProductDialog.close();
+      },
+
+      _closeProductV4Dialog() {
+        this.aProductV4FieldIds.forEach((sFieldId) => {
+          this.byId(sFieldId).setValueState("None");
+        });
+
+        this._oProductV4Dialog.close();
       },
 
       /**
