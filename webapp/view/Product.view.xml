@@ -1,6 +1,74 @@
 <mvc:View controllerName="sapui5task2.controller.Product"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:uxap="sap.uxap"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
     xmlns="sap.m">
     <Page id="productPage" title="{i18n>productPageTitle}" showNavButton="true" navButtonPress=".onNavBack">
+        <uxap:ObjectPageLayout id="productObjectPage" upperCaseAnchorBar="false">
+            <uxap:headerTitle>
+                <uxap:ObjectPageDynamicHeaderTitle>
+                    <uxap:heading>
+                        <Title text="{odataV2>Name}" wrapping="true"/>
+                    </uxap:heading>
+                </uxap:ObjectPageDynamicHeaderTitle>
+            </uxap:headerTitle>
+            <uxap:sections>
+                <uxap:ObjectPageSection id="productInfoSection" title="{i18n>productInfoSectionTitle}">
+                    <uxap:subSections>
+                        <uxap:ObjectPageSubSection>
+                            <form:SimpleForm id="productForm" editable="false" layout="ResponsiveGridLayout">
+                                <form:content>
+                                    <Label text="{i18n>productIdLabel}"/>
+                                    <Text text="{odataV2>ID}"/>
+                                    <Label text="{i18n>productNameLabel}"/>
+                                    <Text text="{odataV2>Name}"/>
+                                    <Label text="{i18n>productDescriptionLabel}"/>
+                                    <Text text="{odataV2>Description}"/>
+                                    <Label text="{i18n>productReleaseDateLabel}"/>
+                                    <Text text="{
+                                        path: 'odataV2>ReleaseDate',
+                                        type: 'sap.ui.model.odata.type.DateTime'
+                                    }"/>
+                                    <Label text="{i18n>productDiscontinuedDateLabel}"/>
+                                    <Text text="{
+                                        path: 'odataV2>DiscontinuedDate',
+                                        type: 'sap.ui.model.odata.type.DateTime'
+                                    }"/>
+                                    <Label text="{i18n>productRatingLabel}"/>
+                                    <Text text="{odataV2>Rating}"/>
+                                    <Label text="{i18n>productPriceLabel}"/>
+                                    <Text text="{odataV2>Price}"/>
+                                </form:content>
+                            </form:SimpleForm>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+                <uxap:ObjectPageSection id="supplierSection" title="{i18n>supplierSectionTitle}">
+                    <uxap:subSections>
+                        <uxap:ObjectPageSubSection>
+                            <form:SimpleForm id="supplierForm" editable="false" layout="ResponsiveGridLayout" binding="{odataV2>Supplier}">
+                                <form:content>
+                                    <Label text="{i18n>supplierIdLabel}"/>
+                                    <Text text="{odataV2>ID}"/>
+                                    <Label text="{i18n>supplierNameLabel}"/>
+                                    <Text text="{odataV2>Name}"/>
+                                    <Label text="{i18n>supplierStreetLabel}"/>
+                                    <Text text="{odataV2>Address/Street}"/>
+                                    <Label text="{i18n>supplierCityLabel}"/>
+                                    <Text text="{odataV2>Address/City}"/>
+                                    <Label text="{i18n>supplierStateLabel}"/>
+                                    <Text text="{odataV2>Address/State}"/>
+                                    <Label text="{i18n>supplierZipCodeLabel}"/>
+                                    <Text text="{odataV2>Address/ZipCode}"/>
+                                    <Label text="{i18n>supplierCountryLabel}"/>
+                                    <Text text="{odataV2>Address/Country}"/>
+                                </form:content>
+                            </form:SimpleForm>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+            </uxap:sections>
+        </uxap:ObjectPageLayout>
     </Page>
 </mvc:View>
