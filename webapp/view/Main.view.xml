@@ -107,7 +107,7 @@
                             </Column>
                         </columns>
                         <items>
-                            <ColumnListItem vAlign="Middle">
+                            <ColumnListItem vAlign="Middle" type="Navigation" press=".onProductPress">
                                 <cells>
                                     <Text text="{odataV2>ID}"/>
                                     <ObjectIdentifier title="{odataV2>Name}"/>

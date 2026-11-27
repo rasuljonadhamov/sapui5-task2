@@ -370,6 +370,17 @@ sap.ui.define(
         this.byId("productsV2Table").getBinding("items").filter(aFilters);
       },
 
+      onProductPress(oEvent) {
+        const sProductId = oEvent
+          .getSource()
+          .getBindingContext("odataV2")
+          .getProperty("ID");
+
+        this.getOwnerComponent()
+          .getRouter()
+          .navTo("RouteProduct", { ProductID: sProductId });
+      },
+
       _onMainMatched() {
         this._navToTab(this.byId("modelTabBar").getSelectedKey(), true);
       },
