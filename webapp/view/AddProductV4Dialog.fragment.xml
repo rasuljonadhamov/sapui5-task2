@@ -1,0 +1,33 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    <Dialog id="addProductV4Dialog" title="{i18n>addProductDialogTitle}" contentWidth="24rem">
+        <content>
+            <VBox id="addProductV4Form" class="sapUiSmallMargin">
+                <Label id="newProductV4IdLabel" text="{i18n>newProductIdLabel}" labelFor="newProductV4Id" required="true"/>
+                <Input id="newProductV4Id" type="Number" value="{ui>/newProductV4/ID}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductV4NameLabel" text="{i18n>newProductNameLabel}" labelFor="newProductV4Name" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductV4Name" value="{ui>/newProductV4/Name}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductV4DescriptionLabel" text="{i18n>newProductDescriptionLabel}" labelFor="newProductV4Description" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductV4Description" value="{ui>/newProductV4/Description}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductV4ReleaseDateLabel" text="{i18n>newProductReleaseDateLabel}" labelFor="newProductV4ReleaseDate" required="true" class="sapUiSmallMarginTop"/>
+                <DatePicker id="newProductV4ReleaseDate" valueFormat="yyyy-MM-dd" displayFormat="medium" value="{ui>/newProductV4/ReleaseDate}" valueStateText="{i18n>emptyFieldValueStateText}" change=".onProductFieldChange"/>
+
+                <Label id="newProductV4RatingLabel" text="{i18n>newProductRatingLabel}" labelFor="newProductV4Rating" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductV4Rating" type="Number" value="{ui>/newProductV4/Rating}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+
+                <Label id="newProductV4PriceLabel" text="{i18n>newProductPriceLabel}" labelFor="newProductV4Price" required="true" class="sapUiSmallMarginTop"/>
+                <Input id="newProductV4Price" type="Number" value="{ui>/newProductV4/Price}" valueStateText="{i18n>emptyFieldValueStateText}" liveChange=".onProductFieldChange"/>
+            </VBox>
+        </content>
+        <beginButton>
+            <Button id="saveProductV4Button" text="{i18n>saveButton}" type="Emphasized" press=".onSaveProductV4"/>
+        </beginButton>
+        <endButton>
+            <Button id="cancelProductV4Button" text="{i18n>cancelButton}" press=".onCancelProductV4"/>
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>
