@@ -125,10 +125,12 @@
                     </Table>
                 </IconTabFilter>
                 <IconTabFilter id="odataV4ModelTab" key="odataV4" text="oData v4 Model">
-                    <Table id="productsV4Table" items="{odataV4>/Products}" growing="true" class="sapUiResponsiveMargin" width="auto">
+                    <Table id="productsV4Table" items="{odataV4>/Products}" mode="MultiSelect" selectionChange=".onProductsV4SelectionChange" growing="true" class="sapUiResponsiveMargin" width="auto">
                         <headerToolbar>
                             <Toolbar>
                                 <Title id="productsV4TableTitle" text="Products" level="H2"/>
+                                <ToolbarSpacer/>
+                                <Button id="deleteProductsV4Button" text="{i18n>deleteProductsButton}" icon="sap-icon://delete" enabled="{ui>/hasProductsV4Selection}" press=".onDeleteProductsV4"/>
                             </Toolbar>
                         </headerToolbar>
                         <columns>
