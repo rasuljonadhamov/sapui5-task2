@@ -337,13 +337,12 @@ sap.ui.define(
               return;
             }
 
-            const aDeletePromises = aSelectedContexts.map((oContext) =>
-              oContext.delete(this.sDeleteGroup),
-            );
+            aSelectedContexts.forEach((oContext) => {
+              oContext.delete(this.sDeleteGroup);
+            });
 
-            oModel.submitBatch(this.sDeleteGroup);
-
-            Promise.all(aDeletePromises)
+            oModel
+              .submitBatch(this.sDeleteGroup)
               .then(() => {
                 oTable.removeSelections(true);
                 this.getModel("ui").setProperty(
