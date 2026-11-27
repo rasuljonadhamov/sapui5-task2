@@ -108,7 +108,11 @@ sap.ui.define(
         );
 
         this.setModel(
-          new JSONModel({ hasProductsSelection: false, isProductEdit: false }),
+          new JSONModel({
+            hasProductsSelection: false,
+            hasProductsV4Selection: false,
+            isProductEdit: false,
+          }),
           "ui",
         );
 
@@ -309,6 +313,51 @@ sap.ui.define(
                 );
               },
             });
+          },
+        });
+      },
+
+      onProductsV4SelectionChange(oEvent) {
+        this.getModel("ui").setProperty(
+          "/hasProductsV4Selection",
+          oEvent.getSource().getSelectedContexts().length > 0,
+        );
+      },
+
+      onDeleteProductsV4() {
+        const oTable = this.byId("productsV4Table");
+        const oModel = this.getModel("odataV4");
+        const oResourceBundle = this.getResourceBundle();
+        const aSelectedContexts = oTable.getSelectedContexts();
+
+        MessageBox.confirm(oResourceBundle.getText("deleteConfirmationText"), {
+          title: oResourceBundle.getText("deleteConfirmationTitle"),
+          onClose: (sAction) => {
+            if (sAction !== MessageBox.Action.OK) {
+              return;
+            }
+
+            aSelectedContexts.forEach((oContext) => {
+              oContext.delete(this.sDeleteGroup);
+            });
+
+            oModel
+              .submitBatch(this.sDeleteGroup)
+              .then(() => {
+                oTable.removeSelections(true);
+                this.getModel("ui").setProperty(
+                  "/hasProductsV4Selection",
+                  false,
+                );
+                MessageToast.show(
+                  oResourceBundle.getText("deleteProductSuccessText"),
+                );
+              })
+              .catch(() => {
+                MessageBox.error(
+                  oResourceBundle.getText("deleteProductErrorText"),
+                );
+              });
           },
         });
       },

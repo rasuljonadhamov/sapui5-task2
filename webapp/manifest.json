@@ -83,7 +83,12 @@
         "dataSource": "odataV4",
         "preload": true,
         "settings": {
-          "earlyRequests": true
+          "earlyRequests": true,
+          "groupProperties": {
+            "deleteProducts": {
+              "submit": "API"
+            }
+          }
         }
       }
     },
